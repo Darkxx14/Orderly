@@ -1,0 +1,17 @@
+database:
+  type: "SQLITE" # MYSQL or SQLITE
+
+  host: "localhost"
+  port: 3306
+  database: "orderly"
+  username: "root"
+  password: ""
+
+  sqlite_file: "orderly.db"
+
+  pool_settings:
+    max_pool_size: 10
+    min_idle: 2
+    connection_timeout: 30000
+    idle_timeout: 600000
+    max_lifetime: 1800000

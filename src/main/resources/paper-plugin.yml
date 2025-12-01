@@ -1,0 +1,8 @@
+name: Orderly
+version: '${version}'
+main: com.xyrisdev.orderly.OrderPlugin
+api-version: '1.21'
+authors: [ Darkxx, XyrisDevelopment ]
+bootstrapper: com.xyrisdev.orderly.loader.OrderBootstrapper
+loader: com.xyrisdev.orderly.loader.OrderLoader
+folia-supported: true
