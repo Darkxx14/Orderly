@@ -65,9 +65,14 @@ public enum Orderly {
 		};
 
 		manager = new OrderManager(orderStorage);
+		manager.loadAll();
 	}
 
 	public void shutdown() {
+		if (manager != null) {
+			manager.saveAll();
+		}
+
 		if (provider != null) {
 			provider.disconnect();
 		}

@@ -1,0 +1,42 @@
+title: "Orders"
+size: 54
+
+items:
+  previous_page:
+    slot: 45
+    material: ARROW
+    name: "<gray>Previous Page"
+    lore:
+      - "<yellow>Go back"
+
+  next_page:
+    slot: 53
+    material: ARROW
+    name: "<gray>Next Page"
+    lore:
+      - "<yellow>Load more"
+
+  no_prev:
+    slot: 45
+    material: BARRIER
+    name: "<red>No Previous Page"
+
+  no_next:
+    slot: 53
+    material: BARRIER
+    name: "<red>No Next Page"
+
+content:
+  order:
+    # 👇 These override the item meta when using BaseMode.STACK or BaseMode.MATERIAL
+    name: "<green>Order <id>"
+    lore:
+      - "<white>Owner: <yellow><player>"
+      - "<white>Required: <yellow><required>"
+      - "<white>Delivered: <yellow><delivered>"
+      - "<white>Remaining: <yellow><remaining>"
+      - "<white>Completed: <yellow><completed>"
+      - "<white>Price: <yellow>$<price>"
+      - "<white>Item: <yellow><item>"
+      - ""
+      - "<gray>Created: <created_at>"

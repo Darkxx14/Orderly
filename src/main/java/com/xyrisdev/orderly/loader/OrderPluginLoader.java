@@ -9,7 +9,7 @@ import org.eclipse.aether.repository.RemoteRepository;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("UnstableApiUsage")
-public class OrderPluginLoader implements PluginLoader {
+public final class OrderPluginLoader implements PluginLoader {
 
 	@Override
 	public void classloader(@NotNull PluginClasspathBuilder builder) {

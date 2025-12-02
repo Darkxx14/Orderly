@@ -27,6 +27,7 @@ dependencies {
     compileOnly("com.zaxxer:HikariCP:7.0.2")
 
     implementation("com.xyrisdev:XLibrary:1.0.0")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
 }
 
 tasks.withType<JavaCompile> {

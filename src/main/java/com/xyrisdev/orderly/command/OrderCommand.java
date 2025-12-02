@@ -5,7 +5,7 @@ import com.xyrisdev.library.command.meta.CommandMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-public class OrderCommand {
+public final class OrderCommand {
 
 	public static @NotNull Commands order(@NotNull JavaPlugin plugin) {
 		return Commands.of("order")

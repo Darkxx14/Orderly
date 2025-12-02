@@ -5,5 +5,6 @@ CREATE TABLE IF NOT EXISTS orders (
     required INTEGER NOT NULL,
     price REAL NOT NULL,
     item BLOB NOT NULL,
+    collectable_items TEXT,
     created_at INTEGER NOT NULL
 );
