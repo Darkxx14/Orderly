@@ -1,20 +1,111 @@
 title: "Orders"
 size: 54
 
+custom:
+  test_button:
+    slot: 20
+    material: EMERALD_BLOCK
+    name: "<green>Test Button"
+    lore:
+      - "<gray>Left: player cmd"
+      - "<gray>Right: console cmd"
+      - "<gray>Middle: close"
+    click_action:
+      left_click:
+        - "[player] say hi from player"
+      right_click:
+        - "[console] say hi from console"
+      middle_click:
+        - "[close]"
+
 items:
+  active: "<#39ff14>"
+  normal: "<gray>"
+  bullet: "•"
+
+  sort:
+    slot: 49
+    material: COMPARATOR
+    name: "<#39ff14>Sorting"
+    lore:
+      - "<gray>Click to cycle sorting"
+      - ""
+      - "<color><bullet><sort_most_paid>"
+      - "<color><bullet><sort_most_delivered>"
+      - "<color><bullet><sort_recently_listed>"
+      - "<color><bullet><sort_value_per_item>"
+    options:
+      most_paid:
+        enabled: true
+        name: "Most Paid"
+      most_delivered:
+        enabled: true
+        name: "Most Delivered"
+      recently_listed:
+        enabled: true
+        name: "Recently Listed"
+      value_per_item:
+        enabled: false
+        name: "Most Money Per Item"
+
+  filter:
+    slot: 48
+    material: HOPPER
+    name: "<#39ff14>Filter"
+    lore:
+      - "<gray>Click to cycle categories"
+      - ""
+      - "<color><bullet><filter_all>"
+      - "<color><bullet><filter_building>"
+      - "<color><bullet><filter_decorations>"
+      - "<color><bullet><filter_redstone>"
+      - "<color><bullet><filter_transport>"
+      - "<color><bullet><filter_misc>"
+      - "<color><bullet><filter_food>"
+      - "<color><bullet><filter_tools>"
+      - "<color><bullet><filter_combat>"
+      - "<color><bullet><filter_brewing>"
+    options:
+      all:
+        enabled: true
+        name: "All"
+      building:
+        enabled: true
+        name: "Building"
+      decorations:
+        enabled: true
+        name: "Decorations"
+      redstone:
+        enabled: true
+        name: "Redstone"
+      transport:
+        enabled: true
+        name: "Transport"
+      misc:
+        enabled: true
+        name: "Misc"
+      food:
+        enabled: true
+        name: "Food"
+      tools:
+        enabled: true
+        name: "Tools"
+      combat:
+        enabled: true
+        name: "Combat"
+      brewing:
+        enabled: true
+        name: "Brewing"
+
   previous_page:
     slot: 45
     material: ARROW
     name: "<gray>Previous Page"
-    lore:
-      - "<yellow>Go back"
 
   next_page:
     slot: 53
     material: ARROW
     name: "<gray>Next Page"
-    lore:
-      - "<yellow>Load more"
 
   no_prev:
     slot: 45
@@ -26,17 +117,19 @@ items:
     material: BARRIER
     name: "<red>No Next Page"
 
+  back:
+    slot: 50
+    material: BARRIER
+    name: "<red>Back"
+
 content:
   order:
-    # 👇 These override the item meta when using BaseMode.STACK or BaseMode.MATERIAL
-    name: "<green>Order <id>"
+    name: "<#de3737><player>'s Order"
     lore:
-      - "<white>Owner: <yellow><player>"
-      - "<white>Required: <yellow><required>"
-      - "<white>Delivered: <yellow><delivered>"
-      - "<white>Remaining: <yellow><remaining>"
-      - "<white>Completed: <yellow><completed>"
-      - "<white>Price: <yellow>$<price>"
-      - "<white>Item: <yellow><item>"
-      - ""
-      - "<gray>Created: <created_at>"
+      - "<#de3737><required> <white><item>"
+      - "<#de3737>$<price> <white>each"
+      - " "
+      - "<white><delivered><gray>/<#de3737><required> <white>Delivered"
+      - "<white>$<paid><gray>/<#de3737>$<total_price> <white>Paid"
+      - " "
+      - "<white>Click to deliver <#de3737><player> <white><item>"

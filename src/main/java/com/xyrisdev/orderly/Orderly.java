@@ -4,6 +4,7 @@ import com.xyrisdev.library.config.CachableConfiguration;
 import com.xyrisdev.library.lib.Library;
 import com.xyrisdev.library.scheduler.XScheduler;
 import com.xyrisdev.library.scheduler.scheduling.schedulers.TaskScheduler;
+import com.xyrisdev.orderly.command.OrderCommand;
 import com.xyrisdev.orderly.manager.OrderManager;
 import com.xyrisdev.orderly.storage.*;
 import com.xyrisdev.orderly.storage.factory.StorageFactory;
@@ -66,6 +67,9 @@ public enum Orderly {
 
 		manager = new OrderManager(orderStorage);
 		manager.loadAll();
+
+		// cmds
+		OrderCommand.order(plugin);
 	}
 
 	public void shutdown() {
