@@ -18,18 +18,28 @@ custom:
       middle_click:
         - "[close]"
 
+content:
+  order:
+    name: "<#de3737><player>'s Order"
+    lore:
+      - "<#de3737><required> <white><item>"
+      - "<#de3737>$<price> <white>each"
+      - " "
+      - "<white><delivered><gray>/<#de3737><required> <white>Delivered"
+      - "<white>$<paid><gray>/<#de3737>$<total_price> <white>Paid"
+      - " "
+      - "<white>Click to deliver <#de3737><player> <white><item>"
+
 items:
   active: "<#39ff14>"
   normal: "<gray>"
   bullet: "•"
 
   sort:
-    slot: 49
+    slot: 47
     material: COMPARATOR
     name: "<#39ff14>Sorting"
     lore:
-      - "<gray>Click to cycle sorting"
-      - ""
       - "<color><bullet><sort_most_paid>"
       - "<color><bullet><sort_most_delivered>"
       - "<color><bullet><sort_recently_listed>"
@@ -53,8 +63,6 @@ items:
     material: HOPPER
     name: "<#39ff14>Filter"
     lore:
-      - "<gray>Click to cycle categories"
-      - ""
       - "<color><bullet><filter_all>"
       - "<color><bullet><filter_building>"
       - "<color><bullet><filter_decorations>"
@@ -97,39 +105,45 @@ items:
         enabled: true
         name: "Brewing"
 
+  refresh:
+    slot: 49
+    material: MAP
+    name: "<#39ff14>Orders"
+    lore:
+      - "<white>Click to refresh"
+    flags:
+      - hide attributes
+
+  search:
+    slot: 50
+    material: OAK_SIGN
+    name: "<#39ff14>Search"
+    lore:
+      - "<white>Click to search"
+
+  your_orders:
+    slot: 51
+    material: CHEST
+    name: "<#39ff14>Your Orders"
+    lore:
+      - "<white>Click to view your orders"
+
   previous_page:
     slot: 45
     material: ARROW
-    name: "<gray>Previous Page"
+    name: "<#39ff14>Back"
 
   next_page:
     slot: 53
     material: ARROW
-    name: "<gray>Next Page"
+    name: "<#39ff14>Next"
 
   no_prev:
     slot: 45
     material: BARRIER
-    name: "<red>No Previous Page"
+    name: "<#39ff14>No Previous Page"
 
   no_next:
     slot: 53
     material: BARRIER
-    name: "<red>No Next Page"
-
-  back:
-    slot: 50
-    material: BARRIER
-    name: "<red>Back"
-
-content:
-  order:
-    name: "<#de3737><player>'s Order"
-    lore:
-      - "<#de3737><required> <white><item>"
-      - "<#de3737>$<price> <white>each"
-      - " "
-      - "<white><delivered><gray>/<#de3737><required> <white>Delivered"
-      - "<white>$<paid><gray>/<#de3737>$<total_price> <white>Paid"
-      - " "
-      - "<white>Click to deliver <#de3737><player> <white><item>"
+    name: "<#39ff14>No Next Page"

@@ -17,4 +17,4 @@ items:
     material: PAPER
     name: "<#de3737>New Order"
     lore:
-      - "<gray>Click to create a new order"
+      - "<white>Click to create a new order"

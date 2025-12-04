@@ -17,6 +17,7 @@ public final class OrderViewState {
 
 	private final Map<UUID, OrderSort> sort = new ConcurrentHashMap<>();
 	private final Map<UUID, OrderFilter> filter = new ConcurrentHashMap<>();
+	private final Map<UUID, String> search = new ConcurrentHashMap<>();
 
 	private StateSelector<OrderSort> sortSelector;
 	private StateSelector<OrderFilter> filterSelector;
@@ -67,6 +68,18 @@ public final class OrderViewState {
 			case SORT -> sort.put(id, sortSelector.rotate(sort(id), forward));
 			case FILTER -> filter.put(id, filterSelector.rotate(filter(id), forward));
 		}
+	}
+
+	public @NotNull String search(@NotNull UUID id) {
+		return search.getOrDefault(id, "");
+	}
+
+	public void search(UUID id, @NotNull String query) {
+		search.put(id, query.toLowerCase());
+	}
+
+	public void clearSearch(@NotNull UUID id) {
+		search.remove(id);
 	}
 
 	@Contract(pure = true)

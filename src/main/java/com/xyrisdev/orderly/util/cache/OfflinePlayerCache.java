@@ -11,8 +11,6 @@ import java.util.UUID;
 
 public final class OfflinePlayerCache {
 
-	private static final String UNKNOWN = "Unknown";
-
 	private final Cache<UUID, String> cache = Caffeine.newBuilder()
 			.expireAfterWrite(Duration.ofMinutes(10))
 			.maximumSize(10_000)
@@ -20,7 +18,7 @@ public final class OfflinePlayerCache {
 
 	public @NotNull String name(@NotNull UUID uuid) {
 		final String result = cache.get(uuid, this::lookup);
-		return result == null ? UNKNOWN : result;
+		return result == null ? "Unknown" : result;
 	}
 
 	private String lookup(UUID uuid) {

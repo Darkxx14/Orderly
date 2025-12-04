@@ -9,11 +9,14 @@ import com.xyrisdev.orderly.menu.state.model.OrderFilter;
 import com.xyrisdev.orderly.menu.state.model.OrderSort;
 import com.xyrisdev.orderly.menu.state.model.StateOption;
 import com.xyrisdev.orderly.menu.state.model.StateType;
+import com.xyrisdev.orderly.util.input.InputRequest;
+import com.xyrisdev.orderly.util.input.model.InputType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 
@@ -32,25 +35,44 @@ public final class OrdersMenu {
 		VIEW.load(menu.config().getConfig());
 
 		render(menu, viewer);
+
+		menu.onClose(event -> VIEW.clearSearch(event.getPlayer().getUniqueId()));
 		return menu;
 	}
 
 	private static void render(@NotNull ConfigurablePagedMenu menu, @NotNull Player viewer) {
 		menu.clear();
 
-		final OrderSort sort = VIEW.sort(viewer.getUniqueId());
-		final OrderFilter filter = VIEW.filter(viewer.getUniqueId());
+		final UUID id = viewer.getUniqueId();
+		final OrderSort sort = VIEW.sort(id);
+		final OrderFilter filter = VIEW.filter(id);
+		final String query = VIEW.search(id);
 
 		final String active = menu.config().getString("items.active", "<#39ff14>");
 		final String normal = menu.config().getString("items.normal", "<gray>");
 		final String bullet = menu.config().getString("items.bullet", "•");
 
 		Orderly.INSTANCE.manager().all().stream()
+				.filter(order -> !order.completed()) // we dont wanna show the orders which r completed
 				.filter(order -> {
-					final OrderFilter activeFilter = VIEW.filter(viewer.getUniqueId());
-					return activeFilter == OrderFilter.ALL
-							|| (order.item().getType().getCreativeCategory() != null
-							&& order.item().getType().getCreativeCategory() == activeFilter.category());
+					if (filter != OrderFilter.ALL) {
+						if (order.item().getType().getCreativeCategory() == null) {
+							return false;
+						}
+
+						if (order.item().getType().getCreativeCategory() != filter.category()) {
+							return false;
+						}
+					}
+
+					// search
+					if (!query.isEmpty()) {
+						final String item = order.item().getType().name().toLowerCase();
+						final String owner = Orderly.INSTANCE.manager().playerCache().name(order.owner()).toLowerCase();
+						return item.contains(query) || owner.contains(query);
+					}
+
+					return true;
 				})
 				.sorted(switch (sort) {
 					case MOST_PAID -> Comparator.comparingDouble((Order o) -> o.delivered() * o.price()).reversed();
@@ -116,6 +138,39 @@ public final class OrdersMenu {
 					menu.page(menu.current());
 				});
 
-		menu.item("back").click(event -> event.getWhoClicked().closeInventory());
+		menu.item("refresh")
+				.click(event -> {
+					render(menu, viewer);
+					menu.page(menu.current());
+				});
+
+		menu.item("search")
+				.click(e -> InputRequest.builder()
+						.player(viewer)
+						.type(InputType.SIGN)
+						.title("Search")
+						.question("Search")
+						.onComplete((p, input) -> {
+							if (input.isBlank()) {
+								VIEW.clearSearch(p.getUniqueId());
+							} else {
+								VIEW.search(p.getUniqueId(), input);
+							}
+
+							render(menu, p);
+							menu.page(menu.current());
+						})
+						.onCancel(p -> {
+							render(menu, p);
+							menu.page(menu.current());
+						})
+						.build()
+						.open());
+
+		menu.item("your_orders")
+				.click(event -> {
+					final Player p = (Player) event.getWhoClicked();
+					PlayerOrdersMenu.menu(p).open(p);
+				});
 	}
 }

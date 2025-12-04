@@ -14,31 +14,31 @@ public class AnvilGUIWrapper {
 
 	private final AnvilGUI.Builder builder;
 
-	private AnvilGUIWrapper(Plugin plugin) {
+	private AnvilGUIWrapper(@NotNull Plugin plugin) {
 		this.builder = new AnvilGUI.Builder().plugin(plugin);
 	}
 
 	@Contract("_ -> new")
-	public static @NotNull AnvilGUIWrapper of(Plugin plugin) {
+	public static @NotNull AnvilGUIWrapper of(@NotNull Plugin plugin) {
 		return new AnvilGUIWrapper(plugin);
 	}
 
-	public AnvilGUIWrapper title(String title) {
+	public AnvilGUIWrapper title(@NotNull String title) {
 		builder.title(title);
 		return this;
 	}
 
-	public AnvilGUIWrapper text(String text) {
+	public AnvilGUIWrapper text(@NotNull String text) {
 		builder.text(text);
 		return this;
 	}
 
-	public AnvilGUIWrapper close(Consumer<Player> onClose) {
+	public AnvilGUIWrapper close(@NotNull Consumer<Player> onClose) {
 		builder.onClose(state -> onClose.accept(state.getPlayer()));
 		return this;
 	}
 
-	public AnvilGUIWrapper click(@NotNull BiFunction<Integer, AnvilGUI.StateSnapshot, List<AnvilGUI.ResponseAction>> onClick) {
+	public AnvilGUIWrapper click(@NotNull BiFunction<Integer, AnvilGUI.StateSnapshot, @NotNull List<AnvilGUI.ResponseAction>> onClick) {
 		builder.onClick(onClick);
 		return this;
 	}
@@ -48,7 +48,7 @@ public class AnvilGUIWrapper {
 		return this;
 	}
 
-	public void open(Player player) {
+	public void open(@NotNull Player player) {
 		builder.open(player);
 	}
 }
