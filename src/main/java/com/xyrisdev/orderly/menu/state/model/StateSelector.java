@@ -23,7 +23,8 @@ public record StateSelector<T extends Enum<T>>(@NotNull List<StateOption<T>> opt
 				.findFirst()
 				.orElse(0);
 
-		int next = (index + (forward ? 1 : -1) + options.size()) % options.size();
+		final int next = (index + (forward ? 1 : -1) + options.size()) % options.size();
+
 		return options.get(next).value();
 	}
 }

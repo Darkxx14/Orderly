@@ -21,7 +21,7 @@ public final class OrdersMenu {
 
 	private static final OrderViewState VIEW = new OrderViewState();
 
-	public static @NotNull ConfigurablePagedMenu order(Player viewer) {
+	public static @NotNull ConfigurablePagedMenu menu(@NotNull Player viewer) {
 		final ConfigurablePagedMenu menu = new ConfigurablePagedMenu("menu/orders_menu.yml")
 				.contentSlots(IntStream.range(0, 44).toArray())
 				.previousItem("previous_page")
@@ -29,7 +29,7 @@ public final class OrdersMenu {
 				.noPreviousItem("no_prev")
 				.noNextItem("no_next");
 
-		VIEW.load(menu.config());
+		VIEW.load(menu.config().getConfig());
 
 		render(menu, viewer);
 		return menu;
@@ -48,15 +48,15 @@ public final class OrdersMenu {
 		Orderly.INSTANCE.manager().all().stream()
 				.filter(order -> {
 					final OrderFilter activeFilter = VIEW.filter(viewer.getUniqueId());
-					return activeFilter == OrderFilter.ALL ||
-							(order.item().getType().getCreativeCategory() != null &&
-									order.item().getType().getCreativeCategory() == activeFilter.category());
+					return activeFilter == OrderFilter.ALL
+							|| (order.item().getType().getCreativeCategory() != null
+							&& order.item().getType().getCreativeCategory() == activeFilter.category());
 				})
 				.sorted(switch (sort) {
-					case MOST_PAID       -> Comparator.comparingDouble((Order o) -> o.delivered() * o.price()).reversed();
-					case MOST_DELIVERED  -> Comparator.comparingInt(Order::delivered).reversed();
+					case MOST_PAID -> Comparator.comparingDouble((Order o) -> o.delivered() * o.price()).reversed();
+					case MOST_DELIVERED -> Comparator.comparingInt(Order::delivered).reversed();
 					case RECENTLY_LISTED -> Comparator.comparing(Order::createdAt).reversed();
-					case VALUE_PER_ITEM  -> Comparator.comparingDouble(Order::price).reversed();
+					case VALUE_PER_ITEM -> Comparator.comparingDouble(Order::price).reversed();
 				})
 				.forEach(order -> {
 					final String owner = Orderly.INSTANCE.manager().playerCache().name(order.owner());
@@ -77,7 +77,10 @@ public final class OrdersMenu {
 									Map.entry("<total_price>", String.valueOf(totalPrice)),
 									Map.entry("<item>", order.item().getType().name()),
 									Map.entry("<created_at>", order.createdAt().toString())
-							));
+							))
+							.click(event -> {
+								// manage menu / deliver menu
+							});
 				});
 
 		final Map<String, String> sortMap = new ConcurrentHashMap<>();
@@ -114,6 +117,5 @@ public final class OrdersMenu {
 				});
 
 		menu.item("back").click(event -> event.getWhoClicked().closeInventory());
-		menu.open(viewer);
 	}
 }

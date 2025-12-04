@@ -21,6 +21,8 @@ repositories {
 dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.36")
 
+    compileOnly("net.wesjd:anvilgui:1.10.10-SNAPSHOT")
+    compileOnly("de.rapha149.signgui:signgui:2.5.4")
     compileOnly("org.projectlombok:lombok:1.18.36")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.7")
@@ -48,7 +50,7 @@ tasks.processResources {
 tasks.shadowJar {
     archiveClassifier.set("")
     relocate("com.xyrisdev.library", "com.xyrisdev.orderly.shaded.library")
-    relocate("com.zaxxer.hikari", "com.xyrisdev.orderly.shaded.hikari")
+    relocate("com.github.benmanes.caffeine", "com.xyrisdev.orderly.shaded.caffeine")
 }
 
 tasks.build {

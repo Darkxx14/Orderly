@@ -69,7 +69,7 @@ public enum Orderly {
 		manager.loadAll();
 
 		// cmds
-		OrderCommand.order(plugin);
+		OrderCommand.command(plugin).register();
 	}
 
 	public void shutdown() {

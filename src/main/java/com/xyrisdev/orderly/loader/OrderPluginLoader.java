@@ -18,8 +18,11 @@ public final class OrderPluginLoader implements PluginLoader {
 		resolver.addRepository(new RemoteRepository.Builder("papermc-repo", "default", "https://repo.papermc.io/repository/maven-public/").build());
 		resolver.addRepository(new RemoteRepository.Builder("sonatype", "default", "https://oss.sonatype.org/content/groups/public/").build());
 		resolver.addRepository(new RemoteRepository.Builder("xyris-repo", "default", "https://repo.xyrisdev.com/repository/maven-public").build());
+		resolver.addRepository(new RemoteRepository.Builder("codemc-snapshots", "default", "https://repo.codemc.io/repository/maven-snapshots/").build());
 
 		resolver.addDependency(new Dependency(new DefaultArtifact("com.zaxxer:HikariCP:7.0.2"), null));
+		resolver.addDependency(new Dependency(new DefaultArtifact("de.rapha149.signgui:signgui:2.5.4"), null));
+		resolver.addDependency(new Dependency(new DefaultArtifact("net.wesjd:anvilgui:1.10.10-SNAPSHOT"), null));
 
 		builder.addLibrary(resolver);
 	}

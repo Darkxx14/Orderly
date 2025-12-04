@@ -2,13 +2,14 @@ package com.xyrisdev.orderly.command;
 
 import com.xyrisdev.library.command.Commands;
 import com.xyrisdev.library.command.meta.CommandMeta;
+import com.xyrisdev.orderly.OrderPlugin;
 import com.xyrisdev.orderly.menu.OrdersMenu;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public final class OrderCommand {
 
-	public static @NotNull Commands order(@NotNull JavaPlugin plugin) {
+	public static @NotNull Commands command(@NotNull OrderPlugin plugin) {
 		return Commands.of("order")
 				.meta(CommandMeta.builder().namespace("orderly").alias("orders"))
 				.executes(context -> {
@@ -17,7 +18,9 @@ public final class OrderCommand {
 						return;
 					}
 
-					OrdersMenu.order().open(context.senderAsPlayer());
+					final Player player = context.senderAsPlayer();
+
+					OrdersMenu.menu(player).open(player);
 				})
 
 				.error(ctx -> {

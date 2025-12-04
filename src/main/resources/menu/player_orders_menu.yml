@@ -1,0 +1,20 @@
+title: "Your Orders"
+size: 36
+
+items:
+  player_order:
+    name: "<#de3737><player>'s Order"
+    lore:
+      - "<#de3737><required> <white><item>"
+      - "<#de3737>$<price> <white>each"
+      - " "
+      - "<white><delivered><gray>/<#de3737><required> <white>Delivered"
+      - "<white>$<paid><gray>/<#de3737>$<total_price> <white>Paid"
+      - " "
+
+  new_order:
+    slot: 46
+    material: PAPER
+    name: "<#de3737>New Order"
+    lore:
+      - "<gray>Click to create a new order"
