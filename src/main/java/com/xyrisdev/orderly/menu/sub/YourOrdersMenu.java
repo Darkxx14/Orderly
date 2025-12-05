@@ -1,4 +1,4 @@
-package com.xyrisdev.orderly.menu;
+package com.xyrisdev.orderly.menu.sub;
 
 import com.xyrisdev.library.menu.configurable.ConfigurableMenu;
 import com.xyrisdev.library.menu.configurable.mode.BaseMode;
@@ -9,10 +9,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class PlayerOrdersMenu {
+public class YourOrdersMenu {
 
 	public static @NotNull ConfigurableMenu menu(@NotNull Player viewer) {
-		final ConfigurableMenu menu = new ConfigurableMenu("menu/player_orders_menu.yml");
+		final ConfigurableMenu menu = new ConfigurableMenu("menu/your_orders_menu.yml");
 
 		Orderly.INSTANCE.manager().findByOwner(viewer.getUniqueId()).forEach(order -> {
 			final String owner = Orderly.INSTANCE.manager().playerCache().name(order.owner());
@@ -42,14 +42,8 @@ public class PlayerOrdersMenu {
 
 		menu.item("new_order")
 				.click(event -> {
-					// create menu
+					NewOrderMenu.menu(viewer).open(viewer);
 				});
-
-
-//		menu.onClose(event -> {
-//			final Player player = (Player) event.getPlayer();
-//			OrdersMenu.menu(player).open(player);
-//		});
 
 		return menu;
 	}

@@ -37,7 +37,7 @@ items:
 
   sort:
     slot: 47
-    material: COMPARATOR
+    material: comparator
     name: "<#39ff14>Sorting"
     lore:
       - "<color><bullet><sort_most_paid>"
@@ -60,7 +60,7 @@ items:
 
   filter:
     slot: 48
-    material: HOPPER
+    material: hopper
     name: "<#39ff14>Filter"
     lore:
       - "<color><bullet><filter_all>"
@@ -107,7 +107,7 @@ items:
 
   refresh:
     slot: 49
-    material: MAP
+    material: map
     name: "<#39ff14>Orders"
     lore:
       - "<white>Click to refresh"
@@ -116,34 +116,34 @@ items:
 
   search:
     slot: 50
-    material: OAK_SIGN
+    material: oak sign
     name: "<#39ff14>Search"
     lore:
       - "<white>Click to search"
 
   your_orders:
     slot: 51
-    material: CHEST
+    material: chest
     name: "<#39ff14>Your Orders"
     lore:
       - "<white>Click to view your orders"
 
   previous_page:
     slot: 45
-    material: ARROW
+    material: arrow
     name: "<#39ff14>Back"
 
   next_page:
     slot: 53
-    material: ARROW
+    material: arrow
     name: "<#39ff14>Next"
 
   no_prev:
     slot: 45
-    material: BARRIER
+    material: arrow
     name: "<#39ff14>No Previous Page"
 
   no_next:
     slot: 53
-    material: BARRIER
+    material: arrow
     name: "<#39ff14>No Next Page"

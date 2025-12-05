@@ -1,0 +1,42 @@
+title: "New Order"
+size: 27
+
+items:
+  cancel:
+    slot: 10
+    material: red stained glass pane
+    name: "<#ff0000>Cancel"
+    lore:
+      - "<white>Click to return"
+
+  select_item:
+    slot: 12
+    material: <item>
+    name: "<#de3737>Item"
+    lore:
+      - "<white>Click to choose item"
+      - "<gray>(<item_name>)"
+
+  amount:
+    slot: 13
+    material: chest
+    name: "<#de3737>Amount"
+    lore:
+      - "<white>Click to type number of items"
+      - "<gray>(<amount>)"
+
+  price:
+    slot: 14
+    material: emerald
+    name: "<#de3737>Price"
+    lore:
+      - "<white>Click to type the price per item"
+      - "<gray>($<price>)"
+
+  confirm:
+    slot: 16
+    material: green stained glass pane
+    name: "<#008000>Confirm"
+    lore:
+      - "<white>Click to confirm order"
+      - "<gray>(Total: $<total>)"

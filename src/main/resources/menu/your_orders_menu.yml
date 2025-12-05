@@ -14,7 +14,7 @@ items:
 
   new_order:
     slot: 46
-    material: PAPER
+    material: paper
     name: "<#de3737>New Order"
     lore:
       - "<white>Click to create a new order"

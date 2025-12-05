@@ -9,6 +9,7 @@ import com.xyrisdev.orderly.menu.state.model.OrderFilter;
 import com.xyrisdev.orderly.menu.state.model.OrderSort;
 import com.xyrisdev.orderly.menu.state.model.StateOption;
 import com.xyrisdev.orderly.menu.state.model.StateType;
+import com.xyrisdev.orderly.menu.sub.YourOrdersMenu;
 import com.xyrisdev.orderly.util.input.InputRequest;
 import com.xyrisdev.orderly.util.input.compatibility.InputCompatibility;
 import org.bukkit.entity.Player;
@@ -53,7 +54,7 @@ public final class OrdersMenu {
 		final String bullet = menu.config().getString("items.bullet", "•");
 
 		Orderly.INSTANCE.manager().all().stream()
-				.filter(order -> !order.completed()) // we dont wanna show the orders which r completed
+				.filter(order -> !order.completed()) // we dont wanna show the orders which are completed
 				.filter(order -> {
 					if (filter != OrderFilter.ALL) {
 						if (order.item().getType().getCreativeCategory() == null) {
@@ -170,7 +171,7 @@ public final class OrdersMenu {
 		menu.item("your_orders")
 				.click(event -> {
 					final Player p = (Player) event.getWhoClicked();
-					PlayerOrdersMenu.menu(p).open(p);
+					YourOrdersMenu.menu(p).open(p);
 				});
 	}
 }
