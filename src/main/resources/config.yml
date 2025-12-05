@@ -10,7 +10,7 @@ database:
   sqlite_file: "orderly.db"
 
   pool_settings:
-    max_pool_size: 10
+    max_pool_size: 8
     min_idle: 2
     connection_timeout: 30000
     idle_timeout: 600000
@@ -24,3 +24,19 @@ default_sorting_type: "most_paid"
 # all, building, decorations, redstone, transport,
 # misc, food, tools, combat, brewing
 default_filtering_type: "all"
+
+# defines how player text input is collected.
+#
+# types:
+#   adaptive - uses dialogs when supported by both server (paper 1.21.7+) and client (1.21.6+), otherwise falls back in the order listed below.
+#   dialog - forces dialog input. If dialogs are not supported, the system will warn and use fallback.
+#   anvil - always uses anvil input.
+#   sign - always uses sign input.
+#
+# fallback:
+#   used when type is adaptive or dialog is forced but unavailable.
+text_input:
+  type: adaptive
+  fallback:
+    - anvil
+    - sign

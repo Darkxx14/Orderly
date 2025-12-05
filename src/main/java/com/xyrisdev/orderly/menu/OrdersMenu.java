@@ -10,7 +10,7 @@ import com.xyrisdev.orderly.menu.state.model.OrderSort;
 import com.xyrisdev.orderly.menu.state.model.StateOption;
 import com.xyrisdev.orderly.menu.state.model.StateType;
 import com.xyrisdev.orderly.util.input.InputRequest;
-import com.xyrisdev.orderly.util.input.model.InputType;
+import com.xyrisdev.orderly.util.input.compatibility.InputCompatibility;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -147,7 +147,7 @@ public final class OrdersMenu {
 		menu.item("search")
 				.click(e -> InputRequest.builder()
 						.player(viewer)
-						.type(InputType.SIGN)
+						.type(InputCompatibility.resolve(viewer))
 						.title("Search")
 						.question("Search")
 						.onComplete((p, input) -> {

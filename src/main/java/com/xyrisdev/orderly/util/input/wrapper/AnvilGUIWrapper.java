@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class AnvilGUIWrapper {
+// idk why i have this, TODO: merge this thing into the InputRequest itself
+public final class AnvilGUIWrapper {
 
 	private final AnvilGUI.Builder builder;
 

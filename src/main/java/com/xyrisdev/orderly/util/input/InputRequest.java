@@ -7,13 +7,24 @@ import com.xyrisdev.orderly.util.input.model.InputType;
 import com.xyrisdev.orderly.util.input.wrapper.AnvilGUIWrapper;
 import de.rapha149.signgui.SignGUI;
 import de.rapha149.signgui.exception.SignGUIVersionException;
+import io.papermc.paper.dialog.Dialog;
+import io.papermc.paper.registry.data.dialog.ActionButton;
+import io.papermc.paper.registry.data.dialog.DialogBase;
+import io.papermc.paper.registry.data.dialog.action.DialogAction;
+import io.papermc.paper.registry.data.dialog.input.DialogInput;
+import io.papermc.paper.registry.data.dialog.type.DialogType;
 import lombok.Builder;
 import lombok.Getter;
-import net.wesjd.anvilgui.AnvilGUI;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickCallback;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.bukkit.event.Listener;
+
+import net.wesjd.anvilgui.AnvilGUI;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +32,8 @@ import java.util.function.Consumer;
 
 @Getter
 @Builder
-public final class InputRequest {
+@SuppressWarnings("UnstableApiUsage")
+public final class InputRequest implements Listener {
 
 	@NotNull
 	private final Player player;
@@ -32,31 +44,32 @@ public final class InputRequest {
 
 	@Builder.Default
 	private final String title = "Input";
+
 	@NotNull
 	private final InputCallback onComplete;
+	@Nullable
 	private final Consumer<Player> onCancel;
 
 	public void open() {
 		switch (type) {
 			case ANVIL -> anvil();
 			case SIGN -> sign();
+			case DIALOG -> dialog();
 		}
 	}
 
 	private void anvil() {
-		final boolean[] completed = {false};
+		final boolean[] guard = {false};
 
 		AnvilGUIWrapper.of(OrderPlugin.instance())
 				.title(title)
 				.text(question)
 				.close(p -> {
-					if (!completed[0] && onCancel != null) {
-						onCancel.accept(p);
-					}
+					if (!guard[0] && onCancel != null) onCancel.accept(p);
 				})
 				.click((slot, state) -> {
 					if (slot == 2) {
-						completed[0] = true;
+						guard[0] = true;
 						onComplete.onInput(player, state.getText());
 						return List.of(AnvilGUI.ResponseAction.close());
 					}
@@ -67,16 +80,14 @@ public final class InputRequest {
 
 	private void sign() {
 		try {
-			SignGUI gui;
+			final boolean[] guard = {false};
 
-			final boolean[] completed = {false};
-
-			gui = SignGUI.builder()
+			SignGUI gui = SignGUI.builder()
 					.setLines("", "↑↑↑↑↑↑↑↑↑↑↑↑", question, "")
 					.setType(Material.OAK_SIGN)
 					.setColor(DyeColor.BLACK)
 					.setHandler((p, result) -> {
-						completed[0] = true;
+						guard[0] = true;
 						onComplete.onInput(p, result.getLine(0));
 						return Collections.emptyList();
 					})
@@ -85,9 +96,8 @@ public final class InputRequest {
 
 			gui.open(player);
 
-			// hacky workaround :DDD
 			Orderly.INSTANCE.scheduler().runTaskLater(() -> {
-				if (!completed[0] && onCancel != null) {
+				if (!guard[0] && onCancel != null) {
 					onCancel.accept(player);
 				}
 			}, 4L);
@@ -95,5 +105,56 @@ public final class InputRequest {
 		} catch (SignGUIVersionException e) {
 			player.sendRichMessage("<red>SignGUI does not support this server version.");
 		}
+	}
+
+	private void dialog() {
+		final boolean[] guard = {false};
+
+		Dialog dialog = Dialog.create(builder -> builder
+				.empty().base(DialogBase.builder(Component.text(title))
+						.inputs(List.of(
+								DialogInput.text("input", Component.text(question))
+										.width(250)
+										.initial("")
+										.maxLength(128)
+										.build()
+						))
+						.build()
+				)
+				.type(DialogType.confirmation(
+						ActionButton.builder(Component.text("Confirm"))
+								.width(120)
+								.action(DialogAction.customClick((view, audience) -> {
+									guard[0] = true;
+
+									String input = view.getText("input");
+
+									if (input == null || input.isBlank()) {
+										input = "";
+									}
+
+									if (audience instanceof Player p) {
+										onComplete.onInput(p, input);
+									}
+								}, ClickCallback.Options.builder()
+										.uses(1)
+										.lifetime(ClickCallback.DEFAULT_LIFETIME)
+										.build()))
+								.build(),
+
+						ActionButton.builder(Component.text("Cancel"))
+								.width(120)
+								.action(null)
+								.build()
+				))
+		);
+
+		player.showDialog(dialog);
+
+		Orderly.INSTANCE.scheduler().runTaskLater(() -> {
+			if (!guard[0] && onCancel != null) {
+				onCancel.accept(player);
+			}
+		}, 4L);
 	}
 }
