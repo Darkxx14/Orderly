@@ -2,13 +2,16 @@ package com.xyrisdev.orderly.menu;
 
 import com.xyrisdev.library.menu.configurable.ConfigurablePagedMenu;
 import com.xyrisdev.library.menu.configurable.mode.BaseMode;
+import com.xyrisdev.library.state.api.StateAPI;
+import com.xyrisdev.library.state.api.StateManager;
 import com.xyrisdev.orderly.Orderly;
 import com.xyrisdev.orderly.manager.model.Order;
-import com.xyrisdev.orderly.menu.state.OrderViewState;
-import com.xyrisdev.orderly.menu.state.model.OrderFilter;
-import com.xyrisdev.orderly.menu.state.model.OrderSort;
-import com.xyrisdev.orderly.menu.state.model.StateOption;
-import com.xyrisdev.orderly.menu.state.model.StateType;
+import com.xyrisdev.orderly.menu.state.order.OrderStates;
+import com.xyrisdev.orderly.menu.state.order.config.OrderStateConfig;
+import com.xyrisdev.orderly.menu.state.order.option.OrderStateOption;
+import com.xyrisdev.orderly.menu.state.order.option.wrapper.OrderStateOptions;
+import com.xyrisdev.orderly.menu.state.order.type.OrderFilter;
+import com.xyrisdev.orderly.menu.state.order.type.OrderSort;
 import com.xyrisdev.orderly.menu.sub.YourOrdersMenu;
 import com.xyrisdev.orderly.util.input.InputRequest;
 import com.xyrisdev.orderly.util.input.compatibility.InputCompatibility;
@@ -17,13 +20,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 
 public final class OrdersMenu {
-
-	private static final OrderViewState VIEW = new OrderViewState();
 
 	public static @NotNull ConfigurablePagedMenu menu(@NotNull Player viewer) {
 		final ConfigurablePagedMenu menu = new ConfigurablePagedMenu("menu/orders_menu.yml")
@@ -33,28 +33,28 @@ public final class OrdersMenu {
 				.noPreviousItem("no_prev")
 				.noNextItem("no_next");
 
-		VIEW.load(menu.config().getConfig());
-
+		OrderStates.config(menu.config().getConfig());
 		render(menu, viewer);
 
-		menu.onClose(event -> VIEW.clearSearch(event.getPlayer().getUniqueId()));
+		menu.onClose(event -> StateAPI.manager().clear((Player) event.getPlayer(), OrderStates.SEARCH));
 		return menu;
 	}
 
 	private static void render(@NotNull ConfigurablePagedMenu menu, @NotNull Player viewer) {
 		menu.clear();
 
-		final UUID id = viewer.getUniqueId();
-		final OrderSort sort = VIEW.sort(id);
-		final OrderFilter filter = VIEW.filter(id);
-		final String query = VIEW.search(id);
+		final StateManager state = StateAPI.manager();
+
+		final OrderSort sort = state.get(viewer, OrderStates.SORT);
+		final OrderFilter filter = state.get(viewer, OrderStates.FILTER);
+		final String query = state.get(viewer, OrderStates.SEARCH);
 
 		final String active = menu.config().getString("items.active", "<#39ff14>");
 		final String normal = menu.config().getString("items.normal", "<gray>");
 		final String bullet = menu.config().getString("items.bullet", "•");
 
 		Orderly.INSTANCE.manager().all().stream()
-				.filter(order -> !order.completed()) // we dont wanna show the orders which are completed
+				.filter(order -> !order.completed())
 				.filter(order -> {
 					if (filter != OrderFilter.ALL) {
 						if (order.item().getType().getCreativeCategory() == null) {
@@ -66,7 +66,6 @@ public final class OrdersMenu {
 						}
 					}
 
-					// search
 					if (!query.isEmpty()) {
 						final String item = order.item().getType().name().toLowerCase();
 						final String owner = Orderly.INSTANCE.manager().playerCache().name(order.owner()).toLowerCase();
@@ -109,14 +108,17 @@ public final class OrdersMenu {
 		final Map<String, String> sortMap = new ConcurrentHashMap<>();
 		final Map<String, String> filterMap = new ConcurrentHashMap<>();
 
-		for (StateOption<OrderSort> option : VIEW.sortOptions()) {
+		final OrderStateOptions<OrderSort> sortOptions = OrderStateConfig.sort(menu.config().getConfig());
+		final OrderStateOptions<OrderFilter> filterOptions = OrderStateConfig.filter(menu.config().getConfig());
+
+		for (OrderStateOption<OrderSort> option : sortOptions.options()) {
 			final OrderSort type = option.value();
 			final String placeholder = "<sort_" + type.name().toLowerCase() + ">";
 			final String color = type == sort ? active : normal;
 			sortMap.put(placeholder, color + bullet + option.displayName());
 		}
 
-		for (StateOption<OrderFilter> option : VIEW.filterOptions()) {
+		for (OrderStateOption<OrderFilter> option : filterOptions.options()) {
 			final OrderFilter type = option.value();
 			final String placeholder = "<filter_" + type.name().toLowerCase() + ">";
 			final String color = type == filter ? active : normal;
@@ -126,17 +128,15 @@ public final class OrdersMenu {
 		menu.item("sort")
 				.placeholders(sortMap)
 				.click(e -> {
-					VIEW.rotate(e.getWhoClicked().getUniqueId(), true, StateType.SORT);
-					render(menu, (Player) e.getWhoClicked());
-					menu.page(menu.current());
+					state.rotate(viewer, OrderStates.SORT);
+					refresh(menu, viewer);
 				});
 
 		menu.item("filter")
 				.placeholders(filterMap)
 				.click(e -> {
-					VIEW.rotate(e.getWhoClicked().getUniqueId(), true, StateType.FILTER);
-					render(menu, (Player) e.getWhoClicked());
-					menu.page(menu.current());
+					state.rotate(viewer, OrderStates.FILTER);
+					refresh(menu, viewer);
 				});
 
 		menu.item("refresh")
@@ -153,25 +153,24 @@ public final class OrdersMenu {
 						.question("Search")
 						.onComplete((p, input) -> {
 							if (input.isBlank()) {
-								VIEW.clearSearch(p.getUniqueId());
+								state.clear(p, OrderStates.SEARCH);
 							} else {
-								VIEW.search(p.getUniqueId(), input);
+								state.set(p, OrderStates.SEARCH, input.toLowerCase());
 							}
 
-							render(menu, p);
-							menu.page(menu.current());
-						})
-						.onCancel(p -> {
-							render(menu, p);
-							menu.page(menu.current());
+							refresh(menu, viewer);
 						})
 						.build()
 						.open());
 
-		menu.item("your_orders")
-				.click(event -> {
-					final Player p = (Player) event.getWhoClicked();
-					YourOrdersMenu.menu(p).open(p);
-				});
+		menu.item("your_orders").click(event -> YourOrdersMenu.menu(viewer).open(viewer));
+	}
+
+	// smol refresh method :DDDDDDDD
+	private static void refresh(@NotNull ConfigurablePagedMenu menu, @NotNull Player viewer) {
+		final int page = menu.current();
+
+		render(menu, viewer);
+		menu.page(page);
 	}
 }

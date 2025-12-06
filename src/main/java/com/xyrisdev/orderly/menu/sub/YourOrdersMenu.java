@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class YourOrdersMenu {
+public final class YourOrdersMenu {
 
 	public static @NotNull ConfigurableMenu menu(@NotNull Player viewer) {
 		final ConfigurableMenu menu = new ConfigurableMenu("menu/your_orders_menu.yml");

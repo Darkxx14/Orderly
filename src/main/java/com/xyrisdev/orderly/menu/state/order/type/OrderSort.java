@@ -1,4 +1,4 @@
-package com.xyrisdev.orderly.menu.state.model;
+package com.xyrisdev.orderly.menu.state.order.type;
 
 import org.jetbrains.annotations.NotNull;
 

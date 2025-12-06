@@ -39,4 +39,4 @@ items:
     name: "<#008000>Confirm"
     lore:
       - "<white>Click to confirm order"
-      - "<gray>(Total: $<total>)"
+      - "<gray>(Total: $<total_price>)"
