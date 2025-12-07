@@ -7,6 +7,7 @@ import com.xyrisdev.library.scheduler.scheduling.schedulers.TaskScheduler;
 import com.xyrisdev.library.state.api.StateAPI;
 import com.xyrisdev.orderly.command.OrderCommand;
 import com.xyrisdev.orderly.manager.OrderManager;
+import com.xyrisdev.orderly.menu.sub.ItemSelectMenu;
 import com.xyrisdev.orderly.storage.*;
 import com.xyrisdev.orderly.storage.factory.StorageFactory;
 import com.xyrisdev.orderly.storage.impl.order.MySQLOrderStorage;
@@ -72,6 +73,8 @@ public enum Orderly {
 
 		// cmds
 		OrderCommand.command(plugin).register();
+
+		ItemSelectMenu.cache();
 	}
 
 	public void shutdown() {

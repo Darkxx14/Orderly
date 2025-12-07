@@ -22,8 +22,8 @@ items:
     material: comparator
     name: "<#de3737>Sorting"
     lore:
-      - "<color><bullet><sort_a_to_z>"
-      - "<color><bullet><sort_z_to_a>"
+      - "<color_sort_a_to_z><bullet><sort_a_to_z>"
+      - "<color_sort_z_to_a><bullet><sort_z_to_a>"
     options:
       a_to_z:
         enabled: true
@@ -38,16 +38,16 @@ items:
     material: hopper
     name: "<#de3737>Filter"
     lore:
-      - "<color><bullet><filter_all>"
-      - "<color><bullet><filter_building>"
-      - "<color><bullet><filter_decorations>"
-      - "<color><bullet><filter_redstone>"
-      - "<color><bullet><filter_transport>"
-      - "<color><bullet><filter_misc>"
-      - "<color><bullet><filter_food>"
-      - "<color><bullet><filter_tools>"
-      - "<color><bullet><filter_combat>"
-      - "<color><bullet><filter_brewing>"
+      - "<color_filter_all><bullet><filter_all>"
+      - "<color_filter_building><bullet><filter_building>"
+      - "<color_filter_decorations><bullet><filter_decorations>"
+      - "<color_filter_redstone><bullet><filter_redstone>"
+      - "<color_filter_transport><bullet><filter_transport>"
+      - "<color_filter_misc><bullet><filter_misc>"
+      - "<color_filter_food><bullet><filter_food>"
+      - "<color_filter_tools><bullet><filter_tools>"
+      - "<color_filter_combat><bullet><filter_combat>"
+      - "<color_filter_brewing><bullet><filter_brewing>"
     options:
       all:
         enabled: true

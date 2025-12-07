@@ -112,20 +112,26 @@ public final class OrdersMenu {
 		final Map<String, String> sortMap = new ConcurrentHashMap<>();
 		final Map<String, String> filterMap = new ConcurrentHashMap<>();
 
+		sortOptions.options().forEach(option -> {
+			final OrderSort type = option.value();
+			final String placeholder = "<sort_" + type.name().toLowerCase() + ">";
+			final String colorPlaceholder = "<color_sort_" + type.name().toLowerCase() + ">";
+
+			sortMap.put(placeholder, option.displayName());
+			sortMap.put(colorPlaceholder, type == sort ? active : normal);
+		});
+
+		filterOptions.options().forEach(option -> {
+			final OrderFilter type = option.value();
+			final String placeholder = "<filter_" + type.name().toLowerCase() + ">";
+			final String colorPlaceholder = "<color_filter_" + type.name().toLowerCase() + ">";
+
+			filterMap.put(placeholder, option.displayName());
+			filterMap.put(colorPlaceholder, type == filter ? active : normal);
+		});
+
 		sortMap.put("<bullet>", bullet);
 		filterMap.put("<bullet>", bullet);
-
-		sortOptions.options().forEach(option ->
-				sortMap.put("<sort_" + option.value().name().toLowerCase() + ">", option.displayName())
-		);
-
-		filterOptions.options().forEach(option ->
-				filterMap.put("<filter_" + option.value().name().toLowerCase() + ">", option.displayName())
-		);
-
-		sortMap.put("<color>", sort == OrderSort.valueOf(sort.name()) ? active : normal);
-		filterMap.put("<color>", filter == null ? normal : (filter == OrderFilter.valueOf(filter.name()) ? active : normal));
-
 
 		menu.item("sort")
 				.placeholders(sortMap)
@@ -160,7 +166,7 @@ public final class OrdersMenu {
 								state.set(p, OrderStates.SEARCH, input.toLowerCase());
 							}
 
-							refresh(menu, viewer);
+							menu(viewer).open(p);
 						})
 						.build()
 						.open());

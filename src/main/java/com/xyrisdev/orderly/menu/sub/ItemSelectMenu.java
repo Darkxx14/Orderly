@@ -4,14 +4,17 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.xyrisdev.library.menu.configurable.ConfigurablePagedMenu;
 import com.xyrisdev.library.menu.configurable.mode.BaseMode;
+import com.xyrisdev.library.scheduler.scheduling.tasks.MyScheduledTask;
 import com.xyrisdev.library.state.api.StateAPI;
 import com.xyrisdev.library.state.api.StateManager;
 import com.xyrisdev.orderly.OrderPlugin;
+import com.xyrisdev.orderly.Orderly;
 import com.xyrisdev.orderly.menu.state.item.ItemStates;
 import com.xyrisdev.orderly.menu.state.item.config.ItemStateConfig;
 import com.xyrisdev.orderly.menu.state.item.option.wrapper.ItemStateOptions;
 import com.xyrisdev.orderly.menu.state.item.type.ItemFilter;
 import com.xyrisdev.orderly.menu.state.item.type.ItemSort;
+import com.xyrisdev.orderly.menu.state.item.option.ItemStateOption;
 import com.xyrisdev.orderly.menu.state.order.OrderCreationStates;
 import com.xyrisdev.orderly.util.NonObtainableItemsUtil;
 import com.xyrisdev.orderly.util.TextUtil;
@@ -23,26 +26,51 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Duration;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.Comparator;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 public final class ItemSelectMenu {
 
-	// cache base set of valid materials
-	private static final List<Material> BASE = List.of(Material.values()).stream()
-			.filter(Material::isItem)
-			.filter(material -> !NonObtainableItemsUtil.nonObtainable(material))
-			.toList();
-
-	// caffeine cache for filtered/sorted/search states
 	private static final Cache<String, List<Material>> CACHE = Caffeine.newBuilder()
-			.expireAfterAccess(Duration.ofSeconds(30))
-			.maximumSize(5000)
+			.expireAfterAccess(10, TimeUnit.MINUTES)
+			.maximumSize(500)
 			.build();
+
+	public static void cache() {
+		final List<Material> raw = Arrays.stream(Material.values())
+				.filter(Material::isItem)
+				.filter(mat -> !NonObtainableItemsUtil.nonObtainable(mat))
+				.toList();
+
+		final List<Material> collected = new ArrayList<>(raw.size());
+		final int batchSize = 80;
+
+		final MyScheduledTask[] holder = new MyScheduledTask[1];
+
+		holder[0] = Orderly.INSTANCE.scheduler().runTaskTimerAsynchronously(new Runnable() {
+			int index = 0;
+
+			@Override
+			public void run() {
+				if (index >= raw.size()) {
+					collected.sort(Comparator.comparing(Material::name));
+
+					final String key = ItemSort.A_TO_Z + "|" + ItemFilter.ALL + "|";
+					ItemSelectMenu.CACHE.put(key, List.copyOf(collected));
+
+					OrderPlugin.instance().getLogger().info("[Orderly] Cached " + collected.size() + " items");
+					holder[0].cancel();
+					return;
+				}
+
+				int end = Math.min(index + batchSize, raw.size());
+				collected.addAll(raw.subList(index, end));
+				index = end;
+			}
+		}, 0L, 1L);
+	}
 
 	public static @NotNull ConfigurablePagedMenu menu(@NotNull Player viewer) {
 		final ConfigurablePagedMenu menu = new ConfigurablePagedMenu(OrderPlugin.instance(), "menu/item_selector_menu.yml")
@@ -53,7 +81,6 @@ public final class ItemSelectMenu {
 				.noNextItem("no_next");
 
 		render(menu, viewer);
-
 		menu.onClose(event -> StateAPI.manager().clear(viewer, ItemStates.SEARCH));
 
 		return menu;
@@ -68,43 +95,48 @@ public final class ItemSelectMenu {
 		final ItemFilter filter = state.get(viewer, ItemStates.FILTER);
 		final String query = state.get(viewer, ItemStates.SEARCH);
 
-		final String active = menu.config().getConfig().getString("items.active", "<#39ff14>");
-		final String normal = menu.config().getConfig().getString("items.normal", "<gray>");
-		final String bullet = menu.config().getConfig().getString("items.bullet", "•");
+		final String key = sort + "|" + filter + "|" + query;
 
-		// cache key
-		String key = sort.name() + "|" + filter.name() + "|" + query;
-
-		// retrieve or build filtered/sorted list
-		List<Material> filtered = CACHE.get(key, k ->
-				BASE.stream()
-						.filter(mat -> filter == ItemFilter.ALL ||
-								(mat.getCreativeCategory() != null && mat.getCreativeCategory() == filter.category()))
-						.filter(mat -> query.isBlank() || mat.name().toLowerCase().contains(query))
-						.sorted(sort == ItemSort.A_TO_Z
-								? Comparator.comparing(Material::name)
-								: Comparator.comparing(Material::name).reversed())
-						.toList()
+		final List<Material> allMaterials = Objects.requireNonNullElseGet(
+				CACHE.get(key, k ->
+						Arrays.stream(Material.values())
+								.filter(Material::isItem)
+								.filter(mat -> !NonObtainableItemsUtil.nonObtainable(mat))
+								.filter(mat -> filter == ItemFilter.ALL ||  mat.getCreativeCategory() == filter.category())
+								.filter(mat -> query == null || query.isBlank() || mat.name().toLowerCase().contains(query))
+								.sorted(sort == ItemSort.A_TO_Z ? Comparator.comparing(Material::name) : Comparator.comparing(Material::name).reversed())
+								.toList()
+				),
+				List::of
 		);
 
-		// paging only visible 45 items
-		int page = menu.current();
-		int perPage = 45;
+		final int page = menu.current() - 1;
+		final int itemsPerPage = 45;
+		final int from = page * itemsPerPage;
+		final int to = Math.min(from + itemsPerPage, allMaterials.size());
 
-		int start = (page - 1) * perPage;
-		int end = Math.min(start + perPage, filtered.size());
+		if (from < allMaterials.size()) {
+			final List<Material> pageMaterials = allMaterials.subList(from, to);
 
-		filtered.subList(start, end).forEach(material -> {
-			menu.content("item")
-					.base(new ItemStack(material), BaseMode.STACK)
-					.placeholders(Map.of("<material>", TextUtil.format(material.name())))
+			pageMaterials.forEach(material ->
+					menu.content("item")
+							.base(new ItemStack(material), BaseMode.STACK)
+							.placeholders(Map.of("<material>", TextUtil.format(material.name())))
 					.click(e -> {
 						if (!EnchantmentUtil.enchantable(material)) {
 							state.set(viewer, OrderCreationStates.STACK, new ItemStack(material));
 							NewOrderMenu.menu(viewer).open(viewer);
+							return;
 						}
-					});
-		});
+
+						// enchant menu
+					})
+			);
+		}
+
+		final String active = menu.config().getString("items.active", "<#39ff14>");
+		final String normal = menu.config().getString("items.normal", "<gray>");
+		final String bullet = menu.config().getString("items.bullet", "•");
 
 		final ItemStateOptions<ItemSort> sortOptions = ItemStateConfig.sort(menu.config().getConfig());
 		final ItemStateOptions<ItemFilter> filterOptions = ItemStateConfig.filter(menu.config().getConfig());
@@ -112,19 +144,26 @@ public final class ItemSelectMenu {
 		final Map<String, String> sortMap = new ConcurrentHashMap<>();
 		final Map<String, String> filterMap = new ConcurrentHashMap<>();
 
+		sortOptions.options().stream().filter(ItemStateOption::enabled).forEach(option -> {
+			final ItemSort type = option.value();
+			final String placeholder = "<sort_" + type.name().toLowerCase() + ">";
+			final String colorPlaceholder = "<color_sort_" + type.name().toLowerCase() + ">";
+
+			sortMap.put(placeholder, option.displayName());
+			sortMap.put(colorPlaceholder, type == sort ? active : normal);
+		});
+
+		filterOptions.options().stream().filter(ItemStateOption::enabled).forEach(option -> {
+			final ItemFilter type = option.value();
+			final String placeholder = "<filter_" + type.name().toLowerCase() + ">";
+			final String colorPlaceholder = "<color_filter_" + type.name().toLowerCase() + ">";
+
+			filterMap.put(placeholder, option.displayName());
+			filterMap.put(colorPlaceholder, type == filter ? active : normal);
+		});
+
 		sortMap.put("<bullet>", bullet);
 		filterMap.put("<bullet>", bullet);
-
-		sortOptions.options().forEach(option ->
-				sortMap.put("<sort_" + option.value().name().toLowerCase() + ">", option.displayName())
-		);
-
-		filterOptions.options().forEach(option ->
-				filterMap.put("<filter_" + option.value().name().toLowerCase() + ">", option.displayName())
-		);
-
-		sortMap.put("<color>", active);
-		filterMap.put("<color>", active);
 
 		menu.item("sort")
 				.placeholders(sortMap)
@@ -152,7 +191,8 @@ public final class ItemSelectMenu {
 							} else {
 								state.set(p, ItemStates.SEARCH, input.toLowerCase());
 							}
-							refresh(menu, viewer);
+
+							menu(viewer).open(p);
 						})
 						.build()
 						.open());

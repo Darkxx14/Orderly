@@ -45,6 +45,7 @@ public final class OrderManager {
 
 	public void create(@NotNull Order order) {
 		cache.put(order.id(), order);
+		dirtyOrders.add(order.id());
 	}
 
 	public void update(@NotNull Order order) {
