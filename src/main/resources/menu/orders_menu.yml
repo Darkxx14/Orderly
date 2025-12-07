@@ -23,6 +23,7 @@ default_filtering_type: "all"
 
 content:
   order:
+    enabled: true
     name: "<#de3737><player>'s Order"
     lore:
       - "<#de3737><required> <white><item>"
@@ -39,6 +40,7 @@ items:
   bullet: "•"
 
   sort:
+    enabled: true
     slot: 47
     material: comparator
     name: "<#39ff14>Sorting"
@@ -62,6 +64,7 @@ items:
         name: "Most Money Per Item"
 
   filter:
+    enabled: true
     slot: 48
     material: hopper
     name: "<#39ff14>Filter"
@@ -109,6 +112,7 @@ items:
         name: "Brewing"
 
   refresh:
+    enabled: true
     slot: 49
     material: map
     name: "<#39ff14>Orders"
@@ -118,6 +122,7 @@ items:
       - hide attributes
 
   search:
+    enabled: true
     slot: 50
     material: oak sign
     name: "<#39ff14>Search"
@@ -125,6 +130,7 @@ items:
       - "<white>Click to search"
 
   your_orders:
+    enabled: true
     slot: 51
     material: chest
     name: "<#39ff14>Your Orders"
@@ -132,21 +138,25 @@ items:
       - "<white>Click to view your orders"
 
   previous_page:
+    enabled: true
     slot: 45
     material: arrow
     name: "<#39ff14>Back"
 
   next_page:
+    enabled: true
     slot: 53
     material: arrow
     name: "<#39ff14>Next"
 
   no_prev:
+    enabled: true
     slot: 45
     material: arrow
     name: "<#39ff14>No Previous Page"
 
   no_next:
+    enabled: true
     slot: 53
     material: arrow
     name: "<#39ff14>No Next Page"

@@ -5,6 +5,7 @@ default_sorting_type: "a_to_z"
 default_filtering_type: "all"
 
 content:
+  enabled: true
   item:
     name: "<material>"
     lore:
@@ -16,6 +17,7 @@ items:
   bullet: "•"
 
   sort:
+    enabled: true
     slot: 48
     material: comparator
     name: "<#39ff14>Sorting"
@@ -31,6 +33,7 @@ items:
         name: "Z → A"
 
   filter:
+    enabled: true
     slot: 49
     material: hopper
     name: "<#39ff14>Filter"
@@ -78,6 +81,7 @@ items:
         name: "Brewing"
 
   search:
+    enabled: true
     slot: 50
     material: oak sign
     name: "<#39ff14>Search"
@@ -85,21 +89,25 @@ items:
       - "<white>Click to search"
 
   previous_page:
+    enabled: true
     slot: 45
     material: arrow
     name: "<#39ff14>Back"
 
   next_page:
+    enabled: true
     slot: 53
     material: arrow
     name: "<#39ff14>Next"
 
   no_prev:
+    enabled: true
     slot: 45
     material: arrow
     name: "<#39ff14>No Previous Page"
 
   no_next:
+    enabled: true
     slot: 53
     material: arrow
     name: "<#39ff14>No Next Page"

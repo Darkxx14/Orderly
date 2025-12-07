@@ -30,24 +30,20 @@ public final class NewOrderMenu {
 
 		menu.onClose(event -> {
 			final Player player = (Player) event.getPlayer();
-			state.set(player, OrderCreationStates.STACK, null);
+			state.clear(player, OrderCreationStates.STACK);
 		});
 
 		menu.item("cancel").click(event -> YourOrdersMenu.menu(viewer).open(viewer));
 
 		menu.item("select_item")
-				.placeholders(Map.of(
-						"<item_name>", TextUtil.format(stack.getType().name())
-				))
 				.base(state.get(viewer, OrderCreationStates.STACK), BaseMode.STACK)
+				.placeholders(Map.of("<item_name>", TextUtil.format(stack.getType().name())))
 				.click(event -> {
 					ItemSelectMenu.menu(viewer).open(viewer);
 				});
 
 		menu.item("amount")
-				.placeholders(Map.of(
-						"<amount>", String.valueOf(amount)
-				))
+				.placeholders(Map.of("<amount>", String.valueOf(amount)))
 				.click(event -> InputRequest.builder()
 						.player(viewer)
 						.type(InputCompatibility.resolve(viewer))
@@ -62,9 +58,7 @@ public final class NewOrderMenu {
 						.open());
 
 		menu.item("price")
-				.placeholders(Map.of(
-						"<price>", FormatUtil.format(price)
-				))
+				.placeholders(Map.of("<price>", FormatUtil.format(price)))
 				.click(event -> InputRequest.builder()
 						.player(viewer)
 						.type(InputCompatibility.resolve(viewer))

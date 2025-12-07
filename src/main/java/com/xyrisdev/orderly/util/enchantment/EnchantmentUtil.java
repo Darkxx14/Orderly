@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.Registry;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,6 +34,9 @@ public final class EnchantmentUtil {
 			.expireAfterAccess(Duration.ofMinutes(15))
 			.maximumSize(1024)
 			.build();
+
+	private static final String UNBREAKING_KEY = "minecraft:unbreaking";
+	private static final String MENDING_KEY = "minecraft:mending";
 
 	public static boolean enchantable(@NotNull ItemStack item) {
 		if (item.getType().isAir()) {
@@ -58,7 +62,7 @@ public final class EnchantmentUtil {
 		);
 	}
 
-	public static List<GroupedEnchantment> applicableEnchantments(@NotNull ItemStack item) {
+	public static List<GroupedEnchantment> applicable(@NotNull ItemStack item) {
 		if (item.getType().isAir()) {
 			return List.of();
 		}
@@ -66,6 +70,10 @@ public final class EnchantmentUtil {
 		return APPLICABLE_CACHE.get(item.getType(), material ->
 				REGISTRY.stream()
 						.filter(e -> e.canEnchantItem(item))
+						.filter(e -> {
+							final String key = REGISTRY.getKey(e).asString();
+							return !key.equals(UNBREAKING_KEY) && !key.equals(MENDING_KEY);
+						})
 						.map(e -> new GroupedEnchantment(e, e.getMaxLevel()))
 						.toList()
 		);
@@ -81,6 +89,10 @@ public final class EnchantmentUtil {
 
 			return REGISTRY.stream()
 					.filter(e -> e.canEnchantItem(probe))
+					.filter(e -> {
+						final String key = REGISTRY.getKey(e).asString();
+						return !key.equals(UNBREAKING_KEY) && !key.equals(MENDING_KEY);
+					})
 					.map(e -> new GroupedEnchantment(e, e.getMaxLevel()))
 					.toList();
 		});
@@ -134,5 +146,20 @@ public final class EnchantmentUtil {
 		}
 
 		return result;
+	}
+
+	public static @NotNull ItemStack generate(@NotNull Enchantment enchantment, int level) {
+		final ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
+		final ItemMeta meta = book.getItemMeta();
+
+		if (!(meta instanceof EnchantmentStorageMeta storage)) {
+			return book;
+		}
+
+		final int safeLevel = Math.clamp(level, 1, enchantment.getMaxLevel());
+		storage.addStoredEnchant(enchantment, safeLevel, false);
+
+		book.setItemMeta(storage);
+		return book;
 	}
 }

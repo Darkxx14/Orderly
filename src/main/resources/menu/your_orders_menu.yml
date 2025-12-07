@@ -3,6 +3,7 @@ size: 36
 
 items:
   player_order:
+    enabled: true
     name: "<#de3737><player>'s Order"
     lore:
       - "<#de3737><required> <white><item>"
@@ -13,7 +14,7 @@ items:
       - " "
 
   new_order:
-    slot: 46
+    enabled: true
     material: paper
     name: "<#de3737>New Order"
     lore:

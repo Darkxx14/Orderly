@@ -39,7 +39,10 @@ public final class ItemSelectMenu {
 
 		render(menu, viewer);
 
-		menu.onClose(event -> StateAPI.manager().clear(viewer, ItemStates.SEARCH));
+		menu.onClose(event -> {
+			StateAPI.manager().clear(viewer, ItemStates.SEARCH);
+		});
+
 		return menu;
 	}
 
@@ -85,7 +88,7 @@ public final class ItemSelectMenu {
 								return;
 							}
 
-
+							// e menu
 						})
 				);
 

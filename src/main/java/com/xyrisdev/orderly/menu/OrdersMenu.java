@@ -8,7 +8,6 @@ import com.xyrisdev.orderly.Orderly;
 import com.xyrisdev.orderly.manager.model.Order;
 import com.xyrisdev.orderly.menu.state.order.OrderStates;
 import com.xyrisdev.orderly.menu.state.order.config.OrderStateConfig;
-import com.xyrisdev.orderly.menu.state.order.option.OrderStateOption;
 import com.xyrisdev.orderly.menu.state.order.option.wrapper.OrderStateOptions;
 import com.xyrisdev.orderly.menu.state.order.type.OrderFilter;
 import com.xyrisdev.orderly.menu.state.order.type.OrderSort;

@@ -3,6 +3,7 @@ size: 27
 
 items:
   cancel:
+    enabled: true
     slot: 10
     material: red stained glass pane
     name: "<#ff0000>Cancel"
@@ -10,6 +11,7 @@ items:
       - "<white>Click to return"
 
   select_item:
+    enabled: true
     slot: 12
     material: <item>
     name: "<#de3737>Item"
@@ -18,6 +20,7 @@ items:
       - "<gray>(<item_name>)"
 
   amount:
+    enabled: true
     slot: 13
     material: chest
     name: "<#de3737>Amount"
@@ -26,6 +29,7 @@ items:
       - "<gray>(<amount>)"
 
   price:
+    enabled: true
     slot: 14
     material: emerald
     name: "<#de3737>Price"
@@ -34,6 +38,7 @@ items:
       - "<gray>($<price>)"
 
   confirm:
+    enabled: true
     slot: 16
     material: green stained glass pane
     name: "<#008000>Confirm"

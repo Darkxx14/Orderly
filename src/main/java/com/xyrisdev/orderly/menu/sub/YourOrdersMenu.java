@@ -42,6 +42,7 @@ public final class YourOrdersMenu {
 		});
 
 		menu.item("new_order")
+				.slot(SlotType.ADAPTIVE)
 				.click(event -> {
 					NewOrderMenu.menu(viewer).open(viewer);
 				});
