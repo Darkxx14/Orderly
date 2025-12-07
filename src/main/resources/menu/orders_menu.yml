@@ -18,6 +18,9 @@ custom:
       middle_click:
         - "[close]"
 
+default_sorting_type: "most_paid"
+default_filtering_type: "all"
+
 content:
   order:
     name: "<#de3737><player>'s Order"

@@ -4,6 +4,7 @@ import com.xyrisdev.library.menu.configurable.ConfigurableMenu;
 import com.xyrisdev.library.menu.configurable.mode.BaseMode;
 import com.xyrisdev.library.menu.configurable.mode.SlotType;
 import com.xyrisdev.orderly.Orderly;
+import com.xyrisdev.orderly.util.TextUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +33,7 @@ public final class YourOrdersMenu {
 							Map.entry("<price>", String.valueOf(order.price())),
 							Map.entry("<paid>", String.valueOf(paidPrice)),
 							Map.entry("<total_price>", String.valueOf(totalPrice)),
-							Map.entry("<item>", order.item().getType().name()),
+							Map.entry("<item>", TextUtil.format(order.item().getType().name())),
 							Map.entry("<created_at>", order.createdAt().toString())
 					))
 					.click(event -> {

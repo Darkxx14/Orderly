@@ -11,13 +11,13 @@ import java.util.UUID;
 
 public final class OfflinePlayerCache {
 
-	private final Cache<UUID, String> cache = Caffeine.newBuilder()
+	private final Cache<UUID, String> CACHE = Caffeine.newBuilder()
 			.expireAfterWrite(Duration.ofMinutes(10))
 			.maximumSize(10_000)
 			.build();
 
 	public @NotNull String name(@NotNull UUID uuid) {
-		final String result = cache.get(uuid, this::lookup);
+		final String result = CACHE.get(uuid, this::lookup);
 		return result == null ? "Unknown" : result;
 	}
 

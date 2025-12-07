@@ -1,14 +1,17 @@
 package com.xyrisdev.orderly.menu.sub;
 
 import com.xyrisdev.library.menu.configurable.ConfigurableMenu;
+import com.xyrisdev.library.menu.configurable.mode.BaseMode;
 import com.xyrisdev.library.state.api.StateAPI;
 import com.xyrisdev.library.state.api.StateManager;
 import com.xyrisdev.orderly.menu.state.order.OrderCreationStates;
 import com.xyrisdev.orderly.util.FormatUtil;
 import com.xyrisdev.orderly.util.NumberUtil;
+import com.xyrisdev.orderly.util.TextUtil;
 import com.xyrisdev.orderly.util.input.InputRequest;
 import com.xyrisdev.orderly.util.input.compatibility.InputCompatibility;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -20,15 +23,25 @@ public final class NewOrderMenu {
 
 		final StateManager state = StateAPI.manager();
 
+		final ItemStack stack = state.get(viewer, OrderCreationStates.STACK);
 		final int amount = state.get(viewer, OrderCreationStates.AMOUNT);
 		final double price = state.get(viewer, OrderCreationStates.PRICE);
 		final double totalPrice = amount * price;
 
+		menu.onClose(event -> {
+			final Player player = (Player) event.getPlayer();
+			state.set(player, OrderCreationStates.STACK, null);
+		});
+
 		menu.item("cancel").click(event -> YourOrdersMenu.menu(viewer).open(viewer));
 
 		menu.item("select_item")
+				.placeholders(Map.of(
+						"<item_name>", TextUtil.format(stack.getType().name())
+				))
+				.base(state.get(viewer, OrderCreationStates.STACK), BaseMode.STACK)
 				.click(event -> {
-					// item selector soon
+					ItemSelectMenu.menu(viewer).open(viewer);
 				});
 
 		menu.item("amount")

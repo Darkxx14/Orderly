@@ -4,22 +4,22 @@ import com.xyrisdev.library.state.api.StateScope;
 import com.xyrisdev.library.state.key.EnumStateKey;
 import com.xyrisdev.library.state.key.StringStateKey;
 import com.xyrisdev.library.state.key.builder.StateKey;
-import com.xyrisdev.orderly.menu.state.order.type.OrderFilter;
-import com.xyrisdev.orderly.menu.state.order.type.OrderSort;
+import com.xyrisdev.orderly.menu.state.item.type.ItemFilter;
+import com.xyrisdev.orderly.menu.state.item.type.ItemSort;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class ItemStates {
 
-	public static final EnumStateKey<OrderSort> SORT = StateKey.enumKey(OrderSort.class)
+	public static final EnumStateKey<ItemSort> SORT = StateKey.enumKey(ItemSort.class)
 			.key("orderly:itemselector.sort")
-			.defaultValue(OrderSort.MOST_PAID)
+			.defaultValue(ItemSort.A_TO_Z)
 			.scope(StateScope.METADATA)
 			.register();
 
-	public static final EnumStateKey<OrderFilter> FILTER = StateKey.enumKey(OrderFilter.class)
+	public static final EnumStateKey<ItemFilter> FILTER = StateKey.enumKey(ItemFilter.class)
 			.key("orderly:itemselector.filter")
-			.defaultValue(OrderFilter.ALL)
+			.defaultValue(ItemFilter.ALL)
 			.scope(StateScope.METADATA)
 			.register();
 

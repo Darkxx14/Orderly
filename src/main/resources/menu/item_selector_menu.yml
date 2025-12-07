@@ -1,0 +1,106 @@
+title: "Select Item"
+size: 54
+
+default_sorting_type: "a_to_z"
+default_filtering_type: "all"
+
+content:
+  item:
+    name: "<material>"
+    lore:
+      - "<white>Click to select this item"
+
+items:
+  active: "<#39ff14>"
+  normal: "<gray>"
+  bullet: "•"
+
+  sort:
+    slot: 48
+    material: comparator
+    name: "<#39ff14>Sorting"
+    lore:
+      - "<color><bullet><sort_a_to_z>"
+      - "<color><bullet><sort_z_to_a>"
+    options:
+      a_to_z:
+        enabled: true
+        name: "A → Z"
+      z_to_a:
+        enabled: true
+        name: "Z → A"
+
+  filter:
+    slot: 49
+    material: hopper
+    name: "<#39ff14>Filter"
+    lore:
+      - "<color><bullet><filter_all>"
+      - "<color><bullet><filter_building>"
+      - "<color><bullet><filter_decorations>"
+      - "<color><bullet><filter_redstone>"
+      - "<color><bullet><filter_transport>"
+      - "<color><bullet><filter_misc>"
+      - "<color><bullet><filter_food>"
+      - "<color><bullet><filter_tools>"
+      - "<color><bullet><filter_combat>"
+      - "<color><bullet><filter_brewing>"
+    options:
+      all:
+        enabled: true
+        name: "All"
+      building:
+        enabled: true
+        name: "Building"
+      decorations:
+        enabled: true
+        name: "Decorations"
+      redstone:
+        enabled: true
+        name: "Redstone"
+      transport:
+        enabled: true
+        name: "Transport"
+      misc:
+        enabled: true
+        name: "Misc"
+      food:
+        enabled: true
+        name: "Food"
+      tools:
+        enabled: true
+        name: "Tools"
+      combat:
+        enabled: true
+        name: "Combat"
+      brewing:
+        enabled: true
+        name: "Brewing"
+
+  search:
+    slot: 50
+    material: oak sign
+    name: "<#39ff14>Search"
+    lore:
+      - "<white>Click to search"
+
+  previous_page:
+    slot: 45
+    material: arrow
+    name: "<#39ff14>Back"
+
+  next_page:
+    slot: 53
+    material: arrow
+    name: "<#39ff14>Next"
+
+  no_prev:
+    slot: 45
+    material: arrow
+    name: "<#39ff14>No Previous Page"
+
+  no_next:
+    slot: 53
+    material: arrow
+    name: "<#39ff14>No Next Page"
+

@@ -16,15 +16,6 @@ database:
     idle_timeout: 600000
     max_lifetime: 1800000
 
-# sorting types:
-# most_paid, most_delivered, recently_listed, value_per_item
-default_sorting_type: "most_paid"
-
-# filtering types:
-# all, building, decorations, redstone, transport,
-# misc, food, tools, combat, brewing
-default_filtering_type: "all"
-
 # defines how player text input is collected.
 #
 # types:

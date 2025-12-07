@@ -13,6 +13,7 @@ import com.xyrisdev.orderly.menu.state.order.option.wrapper.OrderStateOptions;
 import com.xyrisdev.orderly.menu.state.order.type.OrderFilter;
 import com.xyrisdev.orderly.menu.state.order.type.OrderSort;
 import com.xyrisdev.orderly.menu.sub.YourOrdersMenu;
+import com.xyrisdev.orderly.util.TextUtil;
 import com.xyrisdev.orderly.util.input.InputRequest;
 import com.xyrisdev.orderly.util.input.compatibility.InputCompatibility;
 import org.bukkit.entity.Player;
@@ -27,7 +28,7 @@ public final class OrdersMenu {
 
 	public static @NotNull ConfigurablePagedMenu menu(@NotNull Player viewer) {
 		final ConfigurablePagedMenu menu = new ConfigurablePagedMenu("menu/orders_menu.yml")
-				.contentSlots(IntStream.range(0, 44).toArray())
+				.contentSlots(IntStream.range(0, 45).toArray())
 				.previousItem("previous_page")
 				.nextItem("next_page")
 				.noPreviousItem("no_prev")
@@ -97,7 +98,7 @@ public final class OrdersMenu {
 									Map.entry("<price>", String.valueOf(order.price())),
 									Map.entry("<paid>", String.valueOf(paidPrice)),
 									Map.entry("<total_price>", String.valueOf(totalPrice)),
-									Map.entry("<item>", order.item().getType().name()),
+									Map.entry("<item>", TextUtil.format(order.item().getType().name())),
 									Map.entry("<created_at>", order.createdAt().toString())
 							))
 							.click(event -> {
@@ -111,19 +112,21 @@ public final class OrdersMenu {
 		final OrderStateOptions<OrderSort> sortOptions = OrderStateConfig.sort(menu.config().getConfig());
 		final OrderStateOptions<OrderFilter> filterOptions = OrderStateConfig.filter(menu.config().getConfig());
 
-		for (OrderStateOption<OrderSort> option : sortOptions.options()) {
+		sortOptions.options().forEach(option -> {
 			final OrderSort type = option.value();
 			final String placeholder = "<sort_" + type.name().toLowerCase() + ">";
 			final String color = type == sort ? active : normal;
-			sortMap.put(placeholder, color + bullet + option.displayName());
-		}
 
-		for (OrderStateOption<OrderFilter> option : filterOptions.options()) {
+			sortMap.put(placeholder, color + bullet + option.displayName());
+		});
+
+		filterOptions.options().forEach(option -> {
 			final OrderFilter type = option.value();
 			final String placeholder = "<filter_" + type.name().toLowerCase() + ">";
 			final String color = type == filter ? active : normal;
+
 			filterMap.put(placeholder, color + bullet + option.displayName());
-		}
+		});
 
 		menu.item("sort")
 				.placeholders(sortMap)
