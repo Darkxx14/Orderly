@@ -27,8 +27,8 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.7-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.7")
     compileOnly("com.zaxxer:HikariCP:7.0.2")
-    compileOnly("com.xyrisdev:StateAPI:1.0.0")
 
+    implementation("com.xyrisdev:StateAPI:1.0.0")
     implementation("com.xyrisdev:XLibrary:1.0.0")
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
 }

@@ -4,6 +4,7 @@ import com.xyrisdev.library.menu.configurable.ConfigurablePagedMenu;
 import com.xyrisdev.library.menu.configurable.mode.BaseMode;
 import com.xyrisdev.library.state.api.StateAPI;
 import com.xyrisdev.library.state.api.StateManager;
+import com.xyrisdev.orderly.OrderPlugin;
 import com.xyrisdev.orderly.menu.state.order.OrderCreationStates;
 import com.xyrisdev.orderly.menu.sub.session.EnchantSession;
 import com.xyrisdev.orderly.util.TextUtil;
@@ -31,7 +32,7 @@ public class EnchantmentsMenu {
 	);
 
 	public static @NotNull ConfigurablePagedMenu menu(@NotNull Player viewer) {
-		final ConfigurablePagedMenu menu = new ConfigurablePagedMenu("menu/enchantments_menu.yml")
+		final ConfigurablePagedMenu menu = new ConfigurablePagedMenu(OrderPlugin.instance(), "menu/enchantments_menu.yml")
 				.contentSlots()
 				.previousItem("previous_page")
 				.nextItem("next_page")

@@ -4,6 +4,9 @@ import com.xyrisdev.library.menu.configurable.ConfigurableMenu;
 import com.xyrisdev.library.menu.configurable.mode.BaseMode;
 import com.xyrisdev.library.state.api.StateAPI;
 import com.xyrisdev.library.state.api.StateManager;
+import com.xyrisdev.orderly.OrderPlugin;
+import com.xyrisdev.orderly.Orderly;
+import com.xyrisdev.orderly.manager.model.Order;
 import com.xyrisdev.orderly.menu.state.order.OrderCreationStates;
 import com.xyrisdev.orderly.util.FormatUtil;
 import com.xyrisdev.orderly.util.NumberUtil;
@@ -19,7 +22,7 @@ import java.util.Map;
 public final class NewOrderMenu {
 
 	public static @NotNull ConfigurableMenu menu(@NotNull Player viewer) {
-		final ConfigurableMenu menu = new ConfigurableMenu("menu/new_order_menu.yml");
+		final ConfigurableMenu menu = new ConfigurableMenu(OrderPlugin.instance(), "menu/new_order_menu.yml");
 
 		final StateManager state = StateAPI.manager();
 
@@ -79,7 +82,24 @@ public final class NewOrderMenu {
 						"<total_price>", FormatUtil.format(totalPrice)
 				))
 				.click(event -> {
-					// get data (item, amount, price) and create order.
+					if (price == 0) {
+						return;
+					}
+
+					final Order order = Order.builder()
+							.owner(viewer.getUniqueId())
+							.item(stack)
+							.required(amount)
+							.price(price)
+							.build();
+
+					Orderly.INSTANCE.manager().create(order);
+
+					state.clear(viewer, OrderCreationStates.STACK);
+					state.clear(viewer, OrderCreationStates.AMOUNT);
+					state.clear(viewer, OrderCreationStates.PRICE);
+
+					viewer.sendRichMessage("<green>Order created successfully!");
 				});
 
 		return menu;

@@ -3,6 +3,7 @@ package com.xyrisdev.orderly.menu.sub;
 import com.xyrisdev.library.menu.configurable.ConfigurableMenu;
 import com.xyrisdev.library.menu.configurable.mode.BaseMode;
 import com.xyrisdev.library.menu.configurable.mode.SlotType;
+import com.xyrisdev.orderly.OrderPlugin;
 import com.xyrisdev.orderly.Orderly;
 import com.xyrisdev.orderly.util.TextUtil;
 import org.bukkit.entity.Player;
@@ -13,7 +14,7 @@ import java.util.Map;
 public final class YourOrdersMenu {
 
 	public static @NotNull ConfigurableMenu menu(@NotNull Player viewer) {
-		final ConfigurableMenu menu = new ConfigurableMenu("menu/your_orders_menu.yml");
+		final ConfigurableMenu menu = new ConfigurableMenu(OrderPlugin.instance(), "menu/your_orders_menu.yml");
 
 		Orderly.INSTANCE.manager().findByOwner(viewer.getUniqueId()).forEach(order -> {
 			final String owner = Orderly.INSTANCE.manager().playerCache().name(order.owner());

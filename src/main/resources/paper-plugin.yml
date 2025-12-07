@@ -3,6 +3,6 @@ version: '${version}'
 main: com.xyrisdev.orderly.OrderPlugin
 api-version: '1.21'
 authors: [ Darkxx, XyrisDevelopment ]
-bootstrapper: com.xyrisdev.orderly.loader.OrderBootstrapper
-loader: com.xyrisdev.orderly.loader.OrderLoader
+bootstrapper: com.xyrisdev.orderly.loader.OrderPluginBootstrapper
+loader: com.xyrisdev.orderly.loader.OrderPluginLoader
 folia-supported: true

@@ -4,6 +4,7 @@ import com.xyrisdev.library.config.CachableConfiguration;
 import com.xyrisdev.library.lib.Library;
 import com.xyrisdev.library.scheduler.XScheduler;
 import com.xyrisdev.library.scheduler.scheduling.schedulers.TaskScheduler;
+import com.xyrisdev.library.state.api.StateAPI;
 import com.xyrisdev.orderly.command.OrderCommand;
 import com.xyrisdev.orderly.manager.OrderManager;
 import com.xyrisdev.orderly.storage.*;
@@ -29,6 +30,7 @@ public enum Orderly {
 
 	public void start(OrderPlugin plugin) {
 		Library.of(plugin, "orderly");
+		StateAPI.of(plugin);
 
 		this.config = CachableConfiguration.builder()
 				.file("config.yml")

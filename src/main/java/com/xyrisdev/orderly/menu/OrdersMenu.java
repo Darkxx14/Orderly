@@ -4,6 +4,7 @@ import com.xyrisdev.library.menu.configurable.ConfigurablePagedMenu;
 import com.xyrisdev.library.menu.configurable.mode.BaseMode;
 import com.xyrisdev.library.state.api.StateAPI;
 import com.xyrisdev.library.state.api.StateManager;
+import com.xyrisdev.orderly.OrderPlugin;
 import com.xyrisdev.orderly.Orderly;
 import com.xyrisdev.orderly.manager.model.Order;
 import com.xyrisdev.orderly.menu.state.order.OrderStates;
@@ -26,7 +27,7 @@ import java.util.stream.IntStream;
 public final class OrdersMenu {
 
 	public static @NotNull ConfigurablePagedMenu menu(@NotNull Player viewer) {
-		final ConfigurablePagedMenu menu = new ConfigurablePagedMenu("menu/orders_menu.yml")
+		final ConfigurablePagedMenu menu = new ConfigurablePagedMenu(OrderPlugin.instance(), "menu/orders_menu.yml")
 				.contentSlots(IntStream.range(0, 45).toArray())
 				.previousItem("previous_page")
 				.nextItem("next_page")
@@ -105,27 +106,26 @@ public final class OrdersMenu {
 							});
 				});
 
-		final Map<String, String> sortMap = new ConcurrentHashMap<>();
-		final Map<String, String> filterMap = new ConcurrentHashMap<>();
-
 		final OrderStateOptions<OrderSort> sortOptions = OrderStateConfig.sort(menu.config().getConfig());
 		final OrderStateOptions<OrderFilter> filterOptions = OrderStateConfig.filter(menu.config().getConfig());
 
-		sortOptions.options().forEach(option -> {
-			final OrderSort type = option.value();
-			final String placeholder = "<sort_" + type.name().toLowerCase() + ">";
-			final String color = type == sort ? active : normal;
+		final Map<String, String> sortMap = new ConcurrentHashMap<>();
+		final Map<String, String> filterMap = new ConcurrentHashMap<>();
 
-			sortMap.put(placeholder, color + bullet + option.displayName());
-		});
+		sortMap.put("<bullet>", bullet);
+		filterMap.put("<bullet>", bullet);
 
-		filterOptions.options().forEach(option -> {
-			final OrderFilter type = option.value();
-			final String placeholder = "<filter_" + type.name().toLowerCase() + ">";
-			final String color = type == filter ? active : normal;
+		sortOptions.options().forEach(option ->
+				sortMap.put("<sort_" + option.value().name().toLowerCase() + ">", option.displayName())
+		);
 
-			filterMap.put(placeholder, color + bullet + option.displayName());
-		});
+		filterOptions.options().forEach(option ->
+				filterMap.put("<filter_" + option.value().name().toLowerCase() + ">", option.displayName())
+		);
+
+		sortMap.put("<color>", sort == OrderSort.valueOf(sort.name()) ? active : normal);
+		filterMap.put("<color>", filter == null ? normal : (filter == OrderFilter.valueOf(filter.name()) ? active : normal));
+
 
 		menu.item("sort")
 				.placeholders(sortMap)
@@ -170,9 +170,7 @@ public final class OrdersMenu {
 
 	// smol refresh method :DDDDDDDD
 	private static void refresh(@NotNull ConfigurablePagedMenu menu, @NotNull Player viewer) {
-		final int page = menu.current();
-
 		render(menu, viewer);
-		menu.page(page);
+		menu.refresh();
 	}
 }

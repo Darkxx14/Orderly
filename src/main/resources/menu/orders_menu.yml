@@ -35,7 +35,7 @@ content:
       - "<white>Click to deliver <#de3737><player> <white><item>"
 
 items:
-  active: "<#39ff14>"
+  active: "<#de3737>"
   normal: "<gray>"
   bullet: "•"
 
@@ -43,7 +43,7 @@ items:
     enabled: true
     slot: 47
     material: comparator
-    name: "<#39ff14>Sorting"
+    name: "<#de3737>Sorting"
     lore:
       - "<color><bullet><sort_most_paid>"
       - "<color><bullet><sort_most_delivered>"
@@ -67,7 +67,7 @@ items:
     enabled: true
     slot: 48
     material: hopper
-    name: "<#39ff14>Filter"
+    name: "<#de3737>Filter"
     lore:
       - "<color><bullet><filter_all>"
       - "<color><bullet><filter_building>"
@@ -115,7 +115,7 @@ items:
     enabled: true
     slot: 49
     material: map
-    name: "<#39ff14>Orders"
+    name: "<#de3737>Orders"
     lore:
       - "<white>Click to refresh"
     flags:
@@ -125,7 +125,7 @@ items:
     enabled: true
     slot: 50
     material: oak sign
-    name: "<#39ff14>Search"
+    name: "<#de3737>Search"
     lore:
       - "<white>Click to search"
 
@@ -133,7 +133,7 @@ items:
     enabled: true
     slot: 51
     material: chest
-    name: "<#39ff14>Your Orders"
+    name: "<#de3737>Your Orders"
     lore:
       - "<white>Click to view your orders"
 
@@ -141,22 +141,22 @@ items:
     enabled: true
     slot: 45
     material: arrow
-    name: "<#39ff14>Back"
+    name: "<#de3737>Back"
 
   next_page:
     enabled: true
     slot: 53
     material: arrow
-    name: "<#39ff14>Next"
+    name: "<#de3737>Next"
 
   no_prev:
     enabled: true
     slot: 45
     material: arrow
-    name: "<#39ff14>No Previous Page"
+    name: "<#de3737>No Previous Page"
 
   no_next:
     enabled: true
     slot: 53
     material: arrow
-    name: "<#39ff14>No Next Page"
+    name: "<#de3737>No Next Page"
